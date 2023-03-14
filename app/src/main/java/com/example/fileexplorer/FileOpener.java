@@ -10,8 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class FileOpener {
-    public static void openFlie(Context context, File file) throws IOException {
-        File selectedFile = file;
+    public static void openFile(Context context, File file) throws IOException {
         Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         if (uri.toString().contains(".doc")) {
@@ -31,6 +30,5 @@ public class FileOpener {
         }
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         context.startActivity(intent);
-
     }
 }

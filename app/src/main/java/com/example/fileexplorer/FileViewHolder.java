@@ -17,11 +17,9 @@ public class FileViewHolder extends RecyclerView.ViewHolder {
     public FileViewHolder(@NonNull View itemView) {
         super(itemView);
 
-        tvName=itemView.findViewById(R.id.tv_fileName);
-        tvSize=itemView.findViewById(R.id.tv_fileSize);
-        container=itemView.findViewById(R.id.container);
-        imgFile=itemView.findViewById(R.id.img_fileType);
-
-
+        tvName = itemView.findViewById(R.id.tv_fileName);
+        tvSize = itemView.findViewById(R.id.tv_fileSize);
+        container = itemView.findViewById(R.id.container);
+        imgFile = itemView.findViewById(R.id.img_fileType);
     }
 }

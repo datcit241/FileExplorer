@@ -1,23 +1,13 @@
 package com.example.fileexplorer;
 
-import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
-import android.util.Log;
 import android.widget.RemoteViews;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import com.example.fileexplorer.Fragment.CategorizedFragment;
-import com.example.fileexplorer.Fragment.HomeFragment;
 
 /**
  * Implementation of App Widget functionality.
@@ -40,7 +30,7 @@ public class AppWidget extends AppWidgetProvider {
         int usedMemoryRounded = (int) Math.round(usedMemory * 100) / 100;
         double percentageUsed = usedMemory / getTotalInternalMemorySizeInGB() * 100.0;
 
-        CharSequence widgetText = Math.round(percentageUsed*100)/100+"";
+        CharSequence widgetText = Math.round(percentageUsed * 100) / 100 + "";
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget);
         views.setTextViewText(R.id.progress_text, widgetText);
@@ -72,6 +62,7 @@ public class AppWidget extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
@@ -80,11 +71,10 @@ public class AppWidget extends AppWidgetProvider {
 
         if ("ACTION_HOME".equals(action)) {
             Intent myIntent = new Intent(context.getApplicationContext(), MainActivity.class);
-            myIntent.putExtra("fragment_name", "HomeFragment");myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            myIntent.putExtra("fragment_name", "HomeFragment");
+            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(myIntent);
-        }
-
-        else if ("ACTION_STORAGE".equals(action)) {
+        } else if ("ACTION_STORAGE".equals(action)) {
             Intent myIntent = new Intent(context.getApplicationContext(), MainActivity.class);
             myIntent.putExtra("fragment_name", "InternalCard");
             myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -101,9 +91,10 @@ public class AppWidget extends AppWidgetProvider {
         long blockSize = statFs.getBlockSizeLong();
         long availableBlocks = statFs.getAvailableBlocksLong();
         long bytesAvailable = availableBlocks * blockSize;
-        float gbAvailable = (float)bytesAvailable / 1073741824;
+        float gbAvailable = (float) bytesAvailable / 1073741824;
         return gbAvailable;
     }
+
     public static float getTotalInternalMemorySizeInGB() {
         StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
         long blockSize = statFs.getBlockSizeLong();

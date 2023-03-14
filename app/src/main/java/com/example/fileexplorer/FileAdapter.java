@@ -15,19 +15,18 @@ import java.util.List;
 public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
     private Context context;
     private List<File> file;
-    private  OnFileSelectedListener listener;
+    private OnFileSelectedListener listener;
 
     public FileAdapter(Context context, List<File> file, OnFileSelectedListener listener) {
         this.context = context;
         this.file = file;
-        this.listener=listener;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public FileViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new FileViewHolder(LayoutInflater.from(context).inflate(R.layout.file_container, parent, false));
-
     }
 
     @Override
@@ -49,25 +48,25 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
             holder.tvSize.setText(Formatter.formatShortFileSize(context, file.get(holder.getAdapterPosition()).length()));
         }
 
-        if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".jpeg")){
+        if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".jpeg")) {
             holder.imgFile.setImageResource(R.drawable.ic_baseline_image_24);
-        }else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".jpg")){
+        } else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".jpg")) {
             holder.imgFile.setImageResource(R.drawable.ic_baseline_image_24);
-        }else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".png")){
+        } else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".png")) {
             holder.imgFile.setImageResource(R.drawable.ic_baseline_image_24);
-        }else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".pdf")){
+        } else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".pdf")) {
             holder.imgFile.setImageResource(R.drawable.ic_pdf);
-        }else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".doc")){
+        } else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".doc")) {
             holder.imgFile.setImageResource(R.drawable.ic_doc);
-        }else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".mp3")){
+        } else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".mp3")) {
             holder.imgFile.setImageResource(R.drawable.ic_music);
-        }else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".wav")){
+        } else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".wav")) {
             holder.imgFile.setImageResource(R.drawable.ic_music);
-        }else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".mp4")){
+        } else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".mp4")) {
             holder.imgFile.setImageResource(R.drawable.ic_play);
-        }else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".apk")){
+        } else if (file.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".apk")) {
             holder.imgFile.setImageResource(R.drawable.ic_android);
-        }else{
+        } else {
             holder.imgFile.setImageResource(R.drawable.icon_folder);
         }
 
@@ -86,7 +85,6 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
             }
         });
     }
-
 
 
     @Override

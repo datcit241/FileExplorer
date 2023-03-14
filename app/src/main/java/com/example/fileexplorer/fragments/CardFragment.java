@@ -1,4 +1,4 @@
-package com.example.fileexplorer.Fragment;
+package com.example.fileexplorer.fragments;
 
 import static androidx.core.content.ContextCompat.getExternalFilesDirs;
 
@@ -7,41 +7,36 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fileexplorer.ActionAdapter;
 import com.example.fileexplorer.FileAdapter;
 import com.example.fileexplorer.FileOpener;
-import com.example.fileexplorer.MainActivity;
 import com.example.fileexplorer.OnFileSelectedListener;
 import com.example.fileexplorer.R;
+import com.example.fileexplorer.utilities.FileFilter;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -52,18 +47,14 @@ import java.util.List;
 
 
 public class CardFragment extends Fragment implements OnFileSelectedListener {
-
     private RecyclerView recyclerView;
     private FileAdapter fileAdapter;
     private List<File> fileList;
-    private ImageView img_back;
+    //    private ImageView img_back;
     private TextView tv_pahHolder;
-    File storage;
-    String data;
-    String[] items = {"Details", "Rename", "Delete", "Share"};
-    String secStorage;
+    private File storage;
 
-    View view;
+    private View view;
 
     @Nullable
     @Override
@@ -71,46 +62,9 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
         view = inflater.inflate(R.layout.fragment_card, container, false);
 
         tv_pahHolder = view.findViewById(R.id.tv_pathHolder);
-        img_back = view.findViewById(R.id.img_back);
+//        img_back = view.findViewById(R.id.img_back);
 
         String externalStorageState = Environment.getExternalStorageState();
-
-//        if (Environment.MEDIA_MOUNTED.equals(externalStorageState) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(externalStorageState)) {
-//            File externalStorageDirectory = Environment.getExternalStorageDirectory();
-//            String externalStoragePath = externalStorageDirectory.getAbsolutePath();
-//            // Show the path of external storage
-////            Toast.makeText(this, "External Storage Path: " + externalStoragePath, Toast.LENGTH_SHORT).show();
-//            Log.i("TAG", "External Storage Path: " + externalStoragePath);
-//            secStorage = externalStoragePath;
-//
-//        } else {
-//            // External storage is not available
-////            Toast.makeText(this, "External Storage Not Available", Toast.LENGTH_SHORT).show();
-//            Log.i("TAG", "External Storage Not Available");
-//        }
-
-
-//        File[] externalDirs = ContextCompat.getExternalFilesDirs(getActivity(), null);
-//
-//        if (externalDirs.length > 1 && externalDirs[0] != null) {
-//            secStorage = externalDirs[0].getAbsolutePath();
-//        } else {
-//           // secStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        }
-//
-//        storage = new File(secStorage);
-//
-//        try {
-//            data = getArguments().getString("path");
-//            if (data != null) {
-//                File file = new File(data);
-//                if (file.exists()) {
-//                    storage = file;
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
         String sdCardPath = null;
         File[] externalFilesDirs = getExternalFilesDirs(getActivity(), null);
@@ -161,49 +115,12 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
         }).check();
     }
 
-
-    public ArrayList<File> findFile(File file) {
-        ArrayList<File> arrayList = new ArrayList<>();
-
-        if (file.exists()) { // kiểm tra xem file tồn tại hay không
-            File[] files = file.listFiles();
-            if (files != null) { // kiểm tra xem files có tồn tại hay không
-                for (File singleFile : files) {
-                    if (singleFile.isDirectory() && !singleFile.isHidden()) {
-                        arrayList.add(singleFile);
-                    }
-                }
-                for (File singleFile : files) {
-                    if (singleFile.getName().toLowerCase().endsWith(".jpeg") ||
-                            singleFile.getName().toLowerCase().endsWith(".jpg") ||
-                            singleFile.getName().toLowerCase().endsWith(".png") ||
-                            singleFile.getName().toLowerCase().endsWith(".mp3") ||
-                            singleFile.getName().toLowerCase().endsWith(".mp4") ||
-                            singleFile.getName().toLowerCase().endsWith(".wav") ||
-                            singleFile.getName().toLowerCase().endsWith(".pdf") ||
-                            singleFile.getName().toLowerCase().endsWith(".doc") ||
-                            singleFile.getName().toLowerCase().endsWith(".apk")) {
-
-                        arrayList.add(singleFile);
-                    }
-                }
-            } else {
-                // xử lý trường hợp files là null
-            }
-        } else {
-            // xử lý trường hợp file không tồn tại
-        }
-        return arrayList;
-    }
-
-
-
     private void displayFiles() {
         recyclerView = view.findViewById(R.id.recycler_internal);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         fileList = new ArrayList<>();
-        fileList.addAll(findFile(storage));
+        fileList.addAll(FileFilter.filter(storage, null));
         fileAdapter = new FileAdapter(getContext(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
     }
@@ -218,7 +135,7 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, internalFragment).addToBackStack(null).commit();
         } else {
             try {
-                FileOpener.openFlie(getContext(), file);
+                FileOpener.openFile(getContext(), file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -232,8 +149,8 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
         optionDialog.setContentView(R.layout.option_dialog);
         optionDialog.setTitle("Select Options");
         ListView options = (ListView) optionDialog.findViewById(R.id.List);
-        CustomAdapter customAdapter = new CustomAdapter();
-        options.setAdapter(customAdapter);
+        ActionAdapter actionAdapter = new ActionAdapter(getLayoutInflater());
+        options.setAdapter(actionAdapter);
         optionDialog.show();
         options.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -260,7 +177,6 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 optionDialog.cancel();
-
                             }
                         });
                         AlertDialog alertdialog_details = detailDialog.create();
@@ -329,46 +245,8 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
                         share.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", file));
                         startActivity(Intent.createChooser(share, "Share " + fileName));
                         break;
-
-
                 }
             }
         });
-    }
-
-    class CustomAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return items.length;
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return items[i];
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            View myView = getLayoutInflater().inflate(R.layout.option_layout, null);
-            TextView txtOption = myView.findViewById(R.id.txtOption);
-            ImageView imgOption = myView.findViewById(R.id.imgOption);
-            txtOption.setText(items[i]);
-            if (items[i].equals("Details")) {
-                imgOption.setImageResource(R.drawable.ic_details);
-            } else if (items[i].equals("Rename")) {
-                imgOption.setImageResource(R.drawable.ic_rename);
-            } else if (items[i].equals("Delete")) {
-                imgOption.setImageResource(R.drawable.ic_delete);
-            } else if (items[i].equals("Share")) {
-                imgOption.setImageResource(R.drawable.ic_share);
-            }
-            return myView;
-        }
     }
 }
