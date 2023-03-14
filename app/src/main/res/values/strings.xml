@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">File Explorer</string>
+    <string name="Open_drawer">Open Navigation Drawer</string>
+    <string name="Close_drawer">Open Navigation Drawer</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+</resources>

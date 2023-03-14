@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.FileExplorer.AppWidget.Container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.FileExplorer.AppWidgetContainer">
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="275dp"
+        android:layout_height="325dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/process_layout"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_margin="100dp"
+            android:foregroundGravity="center_vertical|center|center_horizontal"
+            android:gravity="center|center_horizontal|center_vertical">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/circle_shape"
+                android:indeterminate="false"
+                android:progressDrawable="@drawable/circle_process_bar"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/progress_text"
+                style="@style/Widget.FileExplorer.AppWidget.InnerView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="false"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center|center_horizontal|center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@string/appwidget_text"
+                android:gravity="center"
+                android:text="@string/appwidget_text"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

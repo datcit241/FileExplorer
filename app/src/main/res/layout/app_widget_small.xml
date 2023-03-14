@@ -1,0 +1,21 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.FileExplorer.AppWidget.Container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:theme="@style/Theme.FileExplorer.AppWidgetContainer">
+
+    <TextView
+        android:id="@+id/progress_text"
+        style="@style/Widget.FileExplorer.AppWidget.InnerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:contentDescription="XX"
+        android:gravity="center"
+        android:text="XX"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold|italic" />
+
+
+</RelativeLayout>
