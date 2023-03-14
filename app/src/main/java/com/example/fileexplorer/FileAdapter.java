@@ -24,7 +24,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fileexplorer.enums.FileAction;
-import com.example.fileexplorer.fragments.CardFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,11 +33,13 @@ import java.util.List;
 
 public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
     private Context context;
+    Fragment onClickFragment;
     private List<File> files;
     private Fragment fragment;
 
-    public FileAdapter(Context context, List<File> file, Fragment fragment) {
+    public FileAdapter(Context context, Fragment onClickFragment, List<File> file, Fragment fragment) {
         this.context = context;
+        this.onClickFragment = onClickFragment;
         this.files = file;
         this.fragment = fragment;
     }
@@ -98,9 +99,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                 if (file.isDirectory()) {
                     Bundle bundle = new Bundle();
                     bundle.putString("path", file.getAbsolutePath());
-                    CardFragment internalFragment = new CardFragment();
-                    internalFragment.setArguments(bundle);
-                    fragment.getFragmentManager().beginTransaction().replace(R.id.fragment_container, internalFragment).addToBackStack(null).commit();
+                    onClickFragment.setArguments(bundle);
+                    fragment.getFragmentManager().beginTransaction().replace(R.id.fragment_container, onClickFragment).addToBackStack(null).commit();
                 } else {
                     try {
                         FileOpener.openFile(context, file);
@@ -121,7 +121,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                 optionDialog.setContentView(R.layout.option_dialog);
                 optionDialog.setTitle("Select Options");
                 ListView options = (ListView) optionDialog.findViewById(R.id.List);
-                ActionAdapter actionAdapter = new ActionAdapter(fragment.getLayoutInflater());
+                FileActionAdapter actionAdapter = new FileActionAdapter(fragment.getLayoutInflater());
                 options.setAdapter(actionAdapter);
                 optionDialog.show();
                 options.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import com.example.fileexplorer.enums.FileAction;
 
-public class ActionAdapter extends BaseAdapter {
+public class FileActionAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
 
-    public ActionAdapter(LayoutInflater inflater) {
+    public FileActionAdapter(LayoutInflater inflater) {
         this.inflater = inflater;
     }
 

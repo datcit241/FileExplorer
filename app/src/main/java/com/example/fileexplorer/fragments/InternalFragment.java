@@ -87,8 +87,8 @@ public class InternalFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         fileList = new ArrayList<>();
-        fileList.addAll(FileFilter.filter(storage, null));
-        fileAdapter = new FileAdapter(getContext(), fileList, this);
+        fileList.addAll(FileFilter.filter(storage, null, true));
+        fileAdapter = new FileAdapter(getContext(), new InternalFragment(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
     }
 }

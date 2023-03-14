@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileFilter {
-    public static List<File> filter(File file, FileTypeEnum fileType) {
+    public static List<File> filter(File file, FileTypeEnum fileType, boolean stickWithCurrentDirectory) {
         List<File> arrayList = new ArrayList<>();
         File[] files = file.listFiles();
 
@@ -17,7 +17,11 @@ public class FileFilter {
 
         for (File singleFile : files) {
             if (singleFile.isDirectory() && !singleFile.isHidden()) {
-                arrayList.addAll(filter(singleFile, fileType));
+                if (stickWithCurrentDirectory) {
+                    arrayList.add(singleFile);
+                } else {
+                    arrayList.addAll(filter(singleFile, fileType, false));
+                }
             } else if (!singleFile.getName().startsWith(".")) {
                 if (fileType == null || fileType == FileTypeEnum.DOWNLOAD || FileValidator.validateFileName(fileType, singleFile.getName().toLowerCase())) {
                     arrayList.add(singleFile);

@@ -84,10 +84,10 @@ public class CategorizedFragment extends Fragment {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            fileList.addAll(FileFilter.filter(path, FileTypeEnum.valueOf(arguments.getString("fileType"))));
+            fileList.addAll(FileFilter.filter(path, FileTypeEnum.valueOf(arguments.getString("fileType")), false));
         }
 
-        fileAdapter = new FileAdapter(getContext(), fileList, this);
+        fileAdapter = new FileAdapter(getContext(), new CategorizedFragment(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
     }
 }

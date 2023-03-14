@@ -151,10 +151,10 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         fileList = new ArrayList<>();
-        fileList.addAll(FileFilter.filter(Environment.getExternalStorageDirectory(), null));
+        fileList.addAll(FileFilter.filter(Environment.getExternalStorageDirectory(), null, false));
         fileList.sort(Comparator.comparing(File::lastModified).reversed());
         ;
-        fileAdapter = new FileAdapter(getContext(), fileList, this);
+        fileAdapter = new FileAdapter(getContext(), new InternalFragment(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
     }
 }
