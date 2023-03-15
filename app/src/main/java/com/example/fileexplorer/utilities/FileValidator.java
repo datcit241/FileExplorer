@@ -9,7 +9,7 @@ import com.example.fileexplorer.models.FileType;
 import java.util.Map;
 
 public class FileValidator {
-    private static Map<FileTypeEnum, FileType> fileTypeToExtensionMap = Map.ofEntries(
+    private static Map<FileTypeEnum, FileType> fileTypeMap = Map.ofEntries(
             entry(FileTypeEnum.IMAGE, new FileType(
                     new String[]{".jpeg", ".jpg", ".png"},
                     R.drawable.ic_baseline_image_24,
@@ -48,7 +48,7 @@ public class FileValidator {
     );
 
     public static boolean validateFileName(FileTypeEnum fileType, String fileName) {
-        String[] extensions = fileTypeToExtensionMap.get(fileType).getExtensions();
+        String[] extensions = fileTypeMap.get(fileType).getExtensions();
         assert extensions != null;
         for (String ext : extensions) {
             if (fileName.endsWith(ext)) return true;
@@ -58,7 +58,7 @@ public class FileValidator {
     }
 
     public static FileTypeEnum getFileTypeEnum(String fileName) {
-        for (Map.Entry<FileTypeEnum, FileType> entry : fileTypeToExtensionMap.entrySet()) {
+        for (Map.Entry<FileTypeEnum, FileType> entry : fileTypeMap.entrySet()) {
             for (String ext : entry.getValue().getExtensions()) {
                 if (fileName.endsWith(ext)) return entry.getKey();
             }
@@ -70,12 +70,12 @@ public class FileValidator {
     public static String getIntentType(String fileName) {
         FileTypeEnum fileTypeEnum = getFileTypeEnum(fileName);
         if (fileTypeEnum == null) return "*.*";
-        return fileTypeToExtensionMap.get(fileTypeEnum).getIntentType();
+        return fileTypeMap.get(fileTypeEnum).getIntentType();
     }
 
     public static int getIcon(String fileName) {
         FileTypeEnum fileTypeEnum = getFileTypeEnum(fileName);
         if (fileTypeEnum == null) return 0;
-        return fileTypeToExtensionMap.get(fileTypeEnum).getResId();
+        return fileTypeMap.get(fileTypeEnum).getResId();
     }
 }
