@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fileexplorer.enums.FileAction;
+import com.example.fileexplorer.utilities.FileValidator;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,26 +68,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
             holder.tvSize.setText(Formatter.formatShortFileSize(context, files.get(holder.getAdapterPosition()).length()));
         }
 
-        if (files.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".jpeg")) {
-            holder.imgFile.setImageResource(R.drawable.ic_baseline_image_24);
-        } else if (files.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".jpg")) {
-            holder.imgFile.setImageResource(R.drawable.ic_baseline_image_24);
-        } else if (files.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".png")) {
-            holder.imgFile.setImageResource(R.drawable.ic_baseline_image_24);
-        } else if (files.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".pdf")) {
-            holder.imgFile.setImageResource(R.drawable.ic_pdf);
-        } else if (files.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".doc")) {
-            holder.imgFile.setImageResource(R.drawable.ic_doc);
-        } else if (files.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".mp3")) {
-            holder.imgFile.setImageResource(R.drawable.ic_music);
-        } else if (files.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".wav")) {
-            holder.imgFile.setImageResource(R.drawable.ic_music);
-        } else if (files.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".mp4")) {
-            holder.imgFile.setImageResource(R.drawable.ic_play);
-        } else if (files.get(holder.getAdapterPosition()).getName().toLowerCase().endsWith(".apk")) {
-            holder.imgFile.setImageResource(R.drawable.ic_android);
-        } else {
+        File file = files.get(holder.getAdapterPosition());
+        if (file.isDirectory()) {
             holder.imgFile.setImageResource(R.drawable.icon_folder);
+        } else {
+            holder.imgFile.setImageResource(FileValidator.getIcon(file.getName().toLowerCase()));
         }
 
         holder.container.setOnClickListener(new View.OnClickListener() {
@@ -208,7 +194,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                                 String fileName = file.getName();
                                 Intent share = new Intent();
                                 share.setAction(Intent.ACTION_SEND);
-                                share.setType("image/jpeg");
+                                share.setType(FileValidator.getIntentType(fileName.toLowerCase()));
                                 share.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file));
                                 fragment.startActivity(Intent.createChooser(share, "Share " + fileName));
                                 break;
