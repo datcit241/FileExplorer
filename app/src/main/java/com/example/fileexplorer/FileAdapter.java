@@ -1,7 +1,5 @@
 package com.example.fileexplorer;
 
-import static com.example.fileexplorer.enums.FileAction.valueOf;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -127,11 +125,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                 options.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        FileAction selectedAction = valueOf(adapterView.getItemAtPosition(i).toString());
+                        FileAction selectedAction = (FileAction) adapterView.getItemAtPosition(i);
                         switch (selectedAction) {
                             case DETAILS:
                                 AlertDialog.Builder detailDialog = new AlertDialog.Builder(context);
-                                detailDialog.setTitle("Details: ");
+                                detailDialog.setTitle(selectedAction + ":");
                                 final TextView details = new TextView(context);
                                 detailDialog.setView(details);
                                 Date lastModified = new Date(file.lastModified());
@@ -154,7 +152,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                                 break;
                             case RENAME:
                                 AlertDialog.Builder renameDialog = new AlertDialog.Builder(context);
-                                renameDialog.setTitle("Rename File: ");
+                                renameDialog.setTitle(selectedAction + " File:");
                                 final EditText name = new EditText(context);
                                 renameDialog.setView(name);
 
@@ -187,7 +185,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                                 break;
                             case DELETE:
                                 AlertDialog.Builder deleteDialog = new AlertDialog.Builder(context);
-                                deleteDialog.setTitle("Delete " + file.getName() + "?");
+                                deleteDialog.setTitle(selectedAction + " " + file.getName() + "?");
                                 deleteDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
