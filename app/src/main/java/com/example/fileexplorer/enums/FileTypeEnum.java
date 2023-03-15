@@ -6,5 +6,7 @@ public enum FileTypeEnum {
     MUSIC,
     DOWNLOAD,
     APKS,
-    DOCS
+    PDF,
+    DOC,
+    DOCS,
 }
