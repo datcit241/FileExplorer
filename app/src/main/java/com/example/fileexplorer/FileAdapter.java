@@ -138,10 +138,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                                 String formattedDate = formatter.format(lastModified);
 
-                                details.setText("File Name: " + file.getName() + "\n" +
-                                        "Size: " + Formatter.formatShortFileSize(context, file.length()) + "\n" +
-                                        "Path: " + file.getAbsolutePath() + "\n" +
-                                        "Last Modified: " + formattedDate);
+                                details.setText("       File Name: " + file.getName() + "\n" +
+                                        "       Size: " + Formatter.formatShortFileSize(context, file.length()) + "\n" +
+                                        "       Path: " + file.getAbsolutePath() + "\n" +
+                                        "       Last Modified: " + formattedDate);
 
                                 detailDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
