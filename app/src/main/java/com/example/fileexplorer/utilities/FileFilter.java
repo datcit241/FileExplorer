@@ -23,8 +23,11 @@ public class FileFilter {
                     arrayList.addAll(filter(singleFile, fileType, false));
                 }
             } else if (!singleFile.getName().startsWith(".")) {
+                String fileName = singleFile.getName().toLowerCase();
                 if (fileType == null || fileType == FileTypeEnum.DOWNLOAD || FileValidator.validateFileName(fileType, singleFile.getName().toLowerCase())) {
-                    arrayList.add(singleFile);
+                    if (FileValidator.getFileTypeEnum(fileName) != null) {
+                        arrayList.add(singleFile);
+                    }
                 }
             }
         }
