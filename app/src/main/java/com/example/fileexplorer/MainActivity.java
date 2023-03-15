@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String currentAndroidVersion = android.os.Build.VERSION.RELEASE;
                 int currentApiVersion = android.os.Build.VERSION.SDK_INT;
                 Toast.makeText(this, "This is a final term project of 2DT group and this device is now using " +
-                        "Android version: " + currentAndroidVersion + " and API: " + currentApiVersion, Toast.LENGTH_SHORT).show();
+                        "Android version: " + currentAndroidVersion + " and API: " + currentApiVersion, Toast.LENGTH_LONG).show();
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
