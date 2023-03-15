@@ -153,7 +153,7 @@ public class HomeFragment extends Fragment {
         fileList = new ArrayList<>();
         fileList.addAll(FileFilter.filter(Environment.getExternalStorageDirectory(), null, false));
         fileList.sort(Comparator.comparing(File::lastModified).reversed());
-        ;
+
         fileAdapter = new FileAdapter(getContext(), new InternalFragment(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
     }

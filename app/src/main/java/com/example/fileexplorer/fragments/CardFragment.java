@@ -103,8 +103,6 @@ public class CardFragment extends Fragment {
         fileList = new ArrayList<>();
         fileList.addAll(FileFilter.filter(storage, null, true));
         Bundle bundle = new Bundle();
-
-        CardFragment internalFragment = new CardFragment();
         fileAdapter = new FileAdapter(getContext(), new CardFragment(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
     }

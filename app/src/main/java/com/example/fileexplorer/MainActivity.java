@@ -249,7 +249,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
     private void doShowPieChart() {
         ArrayList<PieEntry> entries = new ArrayList<>();
         usedSize = getUsedInternalMemoryPercentage();
@@ -267,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         data.setDrawValues(false);
         data.setValueFormatter(new PercentFormatter(piechart));
         data.setValueTextSize(15f);
-        data.setValueTextColor(Color.rgb(6,57,112));
+        data.setValueTextColor(Color.rgb(6, 57, 112));
 
         piechart.setData(data);
         piechart.invalidate();
@@ -283,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         double usedMemory = getTotalInternalMemorySizeInGB() - getAvailableInternalMemorySizeInGB();
         int usedMemoryRounded = (int) Math.round(usedMemory * 100) / 100;
 
-        String coreText = usedMemoryRounded + "/" + (int) getTotalInternalMemorySizeInGB()+"\n"+"GB";
+        String coreText = usedMemoryRounded + "/" + (int) getTotalInternalMemorySizeInGB() + "\n" + "GB";
         piechart.setCenterText(coreText);
 
         piechart.setCenterTextSize(24);
@@ -314,13 +313,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
         long blockSize = statFs.getBlockSizeLong();
         long totalBlocks = statFs.getBlockCountLong();
-        return ((float) (totalBlocks * blockSize) / 1073741824);
+        return (totalBlocks * blockSize) / 1073741824f;
     }
+
     public float getTotalInternalMemorySizeInByte() {
         StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
         long blockSize = statFs.getBlockSizeLong();
         long totalBlocks = statFs.getBlockCountLong();
-        return ((float) (totalBlocks * blockSize));
+        return totalBlocks * blockSize;
     }
 
     public float getAvailableInternalMemorySizeInGB() {
@@ -328,30 +328,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         long blockSize = statFs.getBlockSizeLong();
         long availableBlocks = statFs.getAvailableBlocksLong();
         long bytesAvailable = availableBlocks * blockSize;
-        float gbAvailable = (float)bytesAvailable / 1073741824;
-        return gbAvailable;
+        return bytesAvailable / 1073741824f;
     }
 
     public float getUsedInternalMemoryPercentage() {
-        float totalSize =  getTotalInternalMemorySizeInGB();
-        float availableSize =  getAvailableInternalMemorySizeInGB();
+        float totalSize = getTotalInternalMemorySizeInGB();
+        float availableSize = getAvailableInternalMemorySizeInGB();
         float usedSize = totalSize - availableSize;
-        return ((float) usedSize / (float) totalSize) * 100.0f;
+        return usedSize / totalSize * 100f;
     }
-    public long getTotalImageMemorySize(Context context) {
-        long totalMemorySize = 0;
-        String[] projection = {MediaStore.Images.Media.SIZE};
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-        if (cursor != null) {
-            int sizeIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
-            while (cursor.moveToNext()) {
-                long imageSize = cursor.getLong(sizeIndex);
-                totalMemorySize += imageSize;
-            }
-            cursor.close();
-        }
-        return totalMemorySize;
-    }
+
     private String formatByteSize(long byteSize) {
         String[] units = {"bytes", "KB", "MB", "GB", "TB"};
         int unitIndex = 0;
@@ -365,14 +351,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DecimalFormat decimalFormat = new DecimalFormat("#.#");
         return decimalFormat.format(size) + " " + units[unitIndex];
     }
-    public void doShowSizeTable(){
+
+    public void doShowSizeTable() {
         sizeLayout.setVisibility(View.VISIBLE);
 
         imgSize = findViewById(R.id.img_size);
         vidSize = findViewById(R.id.vid_size);
         musicSize = findViewById(R.id.music_size);
         apkSize = findViewById(R.id.apk_size);
-       // otherSize = findViewById(R.id.other_size);
+        // otherSize = findViewById(R.id.other_size);
         docSize = findViewById(R.id.doc_size);
 
         imgSize.setText(formatByteSize(getTotalImageSize(this)));
@@ -381,112 +368,68 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         docSize.setText(formatByteSize(getTotalDocSize(this)));
         apkSize.setText(formatByteSize(getTotalAPKSize(this)));
 
-
-
-        float other =getAvailableInternalMemorySizeInGB();
-
-       // otherSize.setText(Math.round(other*100)/100 + "GB ");
-
-
-
+        float other = getAvailableInternalMemorySizeInGB();
     }
+
     private long getTotalAPKSize(Context context) {
-        long totalSize = 0;
-        Cursor cursor = null;
-        try {
-            String[] projection = { MediaStore.Files.FileColumns.SIZE };
-            String selection = MediaStore.Files.FileColumns.MIME_TYPE + "=?";
-            String[] selectionArgs = new String[] { "application/vnd.android.package-archive" };
-            cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), projection, selection, selectionArgs, null);
-            int sizeIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.SIZE);
-            while (cursor.moveToNext()) {
-                long size = cursor.getLong(sizeIndex);
-                totalSize += size;
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return totalSize;
+        return getTotalFileTypeSize(
+                MediaStore.Files.getContentUri("external"),
+                MediaStore.Files.FileColumns.MIME_TYPE + "=?", new String[]{"application/vnd.android.package-archive"},
+                null
+        );
     }
 
     private long getTotalDocSize(Context context) {
-        long totalSize = 0;
-        Cursor cursor = null;
-        try {
-            String[] projection = { MediaStore.Files.FileColumns.SIZE };
-            String selection = MediaStore.Files.FileColumns.MIME_TYPE + " IN (?, ?, ?, ?, ?, ?, ?)";
-            String[] selectionArgs = new String[] {
-                    "application/msword",
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    "application/vnd.ms-excel",
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    "application/vnd.ms-powerpoint",
-                    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                    "application/pdf"
-            };
-            cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), projection, selection, selectionArgs, null);
-            int sizeIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.SIZE);
-            while (cursor.moveToNext()) {
-                long size = cursor.getLong(sizeIndex);
-                totalSize += size;
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return totalSize;
+        return getTotalFileTypeSize(
+                MediaStore.Files.getContentUri("external"),
+                MediaStore.Files.FileColumns.MIME_TYPE + " IN (?, ?, ?, ?, ?, ?, ?)",
+                new String[]{
+                        "application/msword",
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        "application/vnd.ms-excel",
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "application/vnd.ms-powerpoint",
+                        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                        "application/pdf"
+                },
+                null
+        );
     }
 
-
-
     private long getTotalMusicSize(Context context) {
-        long totalSize = 0;
-        Cursor cursor = null;
-        try {
-            String[] projection = { MediaStore.Audio.Media.SIZE };
-            cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-            int sizeIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE);
-            while (cursor.moveToNext()) {
-                long size = cursor.getLong(sizeIndex);
-                totalSize += size;
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return totalSize;
+        return getTotalFileTypeSize(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null,
+                null,
+                null
+        );
     }
 
     private long getTotalVideoSize(Context context) {
-        long totalSize = 0;
-        Cursor cursor = null;
-        try {
-            String[] projection = { MediaStore.Video.Media.SIZE };
-            cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-            int sizeIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
-            while (cursor.moveToNext()) {
-                long size = cursor.getLong(sizeIndex);
-                totalSize += size;
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return totalSize;
+        return getTotalFileTypeSize(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                null,
+                null,
+                null
+        );
     }
 
     private long getTotalImageSize(Context context) {
+        return getTotalFileTypeSize(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null,
+                null,
+                null
+        );
+    }
+
+    private long getTotalFileTypeSize(Uri uri, String selection, String[] selectionArguments, String sortOrder) {
         long totalSize = 0;
         Cursor cursor = null;
         try {
-            String[] projection = { MediaStore.Images.Media.SIZE };
-            cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-            int sizeIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
+            String[] projection = {MediaStore.MediaColumns.SIZE};
+            cursor = this.getContentResolver().query(uri, projection, selection, selectionArguments, sortOrder);
+            int sizeIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE);
             while (cursor.moveToNext()) {
                 long size = cursor.getLong(sizeIndex);
                 totalSize += size;
@@ -498,70 +441,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         return totalSize;
     }
-
-
 }
-
-
-//-------------phía dưới code ko chạy dc cho android 11
-//    private void checkPermissions() {
-//        // Check the Android version
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-//            Toast.makeText(this, "Android version does not require permissions", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//
-//            Toast.makeText(this, "Android sdk version >=30", Toast.LENGTH_SHORT).show();
-//            if (Environment.isExternalStorageManager()) {
-//                try {
-//                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-//                    intent.addCategory("android.intent.category.Default");
-//                    intent.setData(Uri.parse(String.format("package is : %s", new Object[] {getApplicationContext().getPackageName()})));
-//                    activityResultLauncher.
-//
-//
-//
-//                    Uri uri = Uri.fromParts("package", this.getPackageName(), null);
-//                    intent.setData(uri);
-//                    startActivity(intent);
-//                }catch (Exception e){
-//                    Log.i("TAG", "request permission catch  ---------" );
-//                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-//                    startActivity(intent);
-//                }
-//            } else {
-//                ActivityCompat.requestPermissions(this,
-//                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                        android.Manifest.permission.READ_EXTERNAL_STORAGE},
-//                        REQUEST_PERMISSION_CODE);
-//            }
-//        }
-//
-//        // Check if the permission has been granted
-//        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-//                && checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//            Toast.makeText(this, "WRITE and READ permissions granted", Toast.LENGTH_SHORT).show();
-//        } else {
-//            String []  permissions = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                    android.Manifest.permission.READ_EXTERNAL_STORAGE};
-//            requestPermissions(permissions, REQUEST_PERMISSION_CODE);
-//        }
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == REQUEST_PERMISSION_CODE) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-//                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-//                // Permission has been granted
-//                Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
-//            } else {
-//                // Permission has been denied
-//                havePermission = false;
-//                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
