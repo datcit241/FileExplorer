@@ -37,7 +37,6 @@ public class InternalFragment extends Fragment {
     private TextView tv_pahHolder;
     File storage;
     String data;
-    String[] items = {"Details", "Rename", "Delete", "Share"};
 
     View view;
 

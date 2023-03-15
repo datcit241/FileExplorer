@@ -102,7 +102,6 @@ public class CardFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         fileList = new ArrayList<>();
         fileList.addAll(FileFilter.filter(storage, null, true));
-        Bundle bundle = new Bundle();
         fileAdapter = new FileAdapter(getContext(), new CardFragment(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
     }

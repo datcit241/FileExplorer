@@ -43,10 +43,7 @@ public class HomeFragment extends Fragment {
     private LinearLayout linearImage, linearVideo, linearMusic, linearDocs, linearDownload, linearApks;
 
     String currentAndroidVersion = android.os.Build.VERSION.RELEASE;
-    int currentApiVersion = android.os.Build.VERSION.SDK_INT;
 
-    File storage;
-    String data;
     View view;
 
     @Nullable

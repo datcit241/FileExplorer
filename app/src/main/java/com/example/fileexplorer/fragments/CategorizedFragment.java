@@ -33,9 +33,6 @@ public class CategorizedFragment extends Fragment {
     private FileAdapter fileAdapter;
     private List<File> fileList;
 
-    File storage;
-    String data;
-    String[] items = {"Details", "Rename", "Delete", "Share"};
     File path;
 
     View view;
